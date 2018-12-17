@@ -14,8 +14,12 @@ let root = {
     return "Hello World!";
   }
 };
+
+app.use("/", (req, res) => {
+  res.send("rest api endpoint");
+});
 app.use(
-  "/",
+  "/graphql",
   graphqlHTTP({
     schema,
     rootValue: root,
