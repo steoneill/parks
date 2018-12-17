@@ -15,9 +15,10 @@ let root = {
   }
 };
 
-app.use("/", (req, res) => {
+app.get("/", (req, res) => {
   res.send("rest api endpoint");
 });
+
 app.use(
   "/graphql",
   graphqlHTTP({
