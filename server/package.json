@@ -1,0 +1,21 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon"
+  },
+  "keywords": [],
+  "author": "Ste O'Neill <hi@steoneill.me> (https://www.steoneill.me)",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4",
+    "graphql": "^14.0.2",
+    "moment": "^2.23.0",
+    "nodemon": "^1.18.9",
+    "themeparks": "^4.7.9"
+  }
+}
