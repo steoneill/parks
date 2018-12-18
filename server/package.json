@@ -12,6 +12,8 @@
   "author": "Ste O'Neill <hi@steoneill.me> (https://www.steoneill.me)",
   "license": "ISC",
   "dependencies": {
+    "cache-manager": "^2.9.0",
+    "cache-manager-fs-binary": "^1.0.4",
     "express": "^4.16.4",
     "express-graphql": "^0.7.1",
     "graphql": "^14.0.2",
