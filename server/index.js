@@ -24,7 +24,7 @@ const resolvers = {
         .then(function(rides) {
           // print each wait time
           for (var i = 0, ride; (ride = rides[i++]); ) {
-            Rides.push(ride);
+            Rides = [...Rides, { ride }];
           }
         }, console.error)
         .then(() => {
