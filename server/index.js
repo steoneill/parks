@@ -1,52 +1,30 @@
-const { GraphQLServer } = require("graphql-yoga");
+const { prisma } = require("./generated/prisma-client");
 
-const Themeparks = require("themeparks");
-
-const typeDefs = `
-  type Query {
-    hello(name: String): String!
-    park(name: String): [String]!
-    allParks: [String],
-  }
-
-
-
-`;
-
-const resolvers = {
-  Query: {
-    park: (_, { name }) => {
-      let Rides = [];
-
-      let park = new Themeparks.Parks[name]();
-      park
-        .GetWaitTimes()
-        .then(function(rides) {
-          // print each wait time
-          for (var i = 0, ride; (ride = rides[i++]); ) {
-            Rides = [...Rides, { ride }];
-          }
-        }, console.error)
-        .then(() => {
-          console.log(Rides);
-          return Rides;
-        });
-    },
-    allParks: () => {
-      let parks = [];
-      for (var park in Themeparks.Parks) {
-        console.log(park);
-        if (park.indexOf("Disney") != -1) {
-          parks.push(new Themeparks.Parks[park]().Name);
+// A `main` function so that we can use async/await
+async function main() {
+  // Create a new user with a new post
+  const newUser = await prisma.createUser({
+    name: "Bob",
+    email: "bob@prisma.io",
+    posts: {
+      create: [
+        {
+          title: "Join us for GraphQL Conf in 2019"
+        },
+        {
+          title: "Subscribe to GraphQL Weekly for GraphQL news"
         }
-      }
-      return parks;
+      ]
     }
-  }
-};
+  });
+  console.log(`Created new user: ${newUser.name} (ID: ${newUser.id})`);
 
-const server = new GraphQLServer({
-  typeDefs,
-  resolvers
-});
-server.start(() => console.log("Server is running"));
+  // Read all users from the database and print them to the console
+  const allUsers = await prisma.users();
+  console.log(allUsers);
+
+  const allPosts = await prisma.posts();
+  console.log(allPosts);
+}
+
+main().catch(e => console.error(e));
