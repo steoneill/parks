@@ -1,25 +1,62 @@
+# version: "3"
+# services:
+#   nginx:
+#     restart: always
+#     build:
+#       context: ./nginx
+#     ports:
+#       - ${PORTS}
+#     volumes:
+#       - ./data/nginx:/etc/nginx/conf.d
+#   frontend:
+#     build:
+#       context: ./frontend
+#     volumes:
+#       - /app/node_modules
+#       - ./frontend:/app
+#   backend:
+#     build:
+#       context: ./server
+#     volumes:
+#       - /app/node_modules
+#       - ./server:/app
+#   prisma:
+#     image: prismagraphql/prisma:1.29
+#     restart: always
+#     ports:
+#       - "4466:4466"
+#     environment:
+#       PRISMA_CONFIG: |
+#         port: 4466
+#         databases:
+#           default:
+#             connector: postgres
+#             host: postgres
+#             port: 5432
+#             user: ${POSTGRES_USER}
+#             password: ${POSTGRES_PASSWORD}
+#             migrations: true
+#   postgres:
+#     image: postgres:10.3
+#     restart: always
+#     environment:
+#       POSTGRES_USER: ${POSTGRES_USER}
+#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+#     volumes:
+#       - postgres:/var/lib/postgresql/data
+# volumes:
+#   postgres:
+
 version: "3"
 services:
-  nginx:
+  postgres:
+    image: postgres:10.3
     restart: always
-    build:
-      context: ./nginx
-    ports:
-      - "${PORTS}"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - ./data/nginx:/etc/nginx/conf.d
-  frontend:
-    build:
-      context: ./frontend
-    volumes:
-      - /app/node_modules
-      - ./frontend:/app
-  backend:
-    build:
-      context: ./server
-    volumes:
-      - /app/node_modules
-      - ./server:/app
+      - postgres:/var/lib/postgresql/data
   prisma:
     image: prismagraphql/prisma:1.29
     restart: always
@@ -36,13 +73,23 @@ services:
             user: ${POSTGRES_USER}
             password: ${POSTGRES_PASSWORD}
             migrations: true
-  postgres:
-    image: postgres:10.3
+  nginx:
     restart: always
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    build:
+      context: ./nginx
+    ports:
+      - "${PORTS}"
+  frontend:
+    build:
+      context: ./frontend
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - /app/node_modules
+      - ./frontend:/app
+  backend:
+    build:
+      context: ./server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
 volumes:
   postgres:
