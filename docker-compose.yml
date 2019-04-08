@@ -1,52 +1,3 @@
-# version: "3"
-# services:
-#   nginx:
-#     restart: always
-#     build:
-#       context: ./nginx
-#     ports:
-#       - ${PORTS}
-#     volumes:
-#       - ./data/nginx:/etc/nginx/conf.d
-#   frontend:
-#     build:
-#       context: ./frontend
-#     volumes:
-#       - /app/node_modules
-#       - ./frontend:/app
-#   backend:
-#     build:
-#       context: ./server
-#     volumes:
-#       - /app/node_modules
-#       - ./server:/app
-#   prisma:
-#     image: prismagraphql/prisma:1.29
-#     restart: always
-#     ports:
-#       - "4466:4466"
-#     environment:
-#       PRISMA_CONFIG: |
-#         port: 4466
-#         databases:
-#           default:
-#             connector: postgres
-#             host: postgres
-#             port: 5432
-#             user: ${POSTGRES_USER}
-#             password: ${POSTGRES_PASSWORD}
-#             migrations: true
-#   postgres:
-#     image: postgres:10.3
-#     restart: always
-#     environment:
-#       POSTGRES_USER: ${POSTGRES_USER}
-#       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-#     volumes:
-#       - postgres:/var/lib/postgresql/data
-# volumes:
-#   postgres:
-
 version: "3"
 services:
   postgres:
@@ -60,6 +11,8 @@ services:
   prisma:
     image: prismagraphql/prisma:1.29
     restart: always
+    depends_on:
+      - postgres
     ports:
       - "4466:4466"
     environment:
@@ -88,8 +41,13 @@ services:
   backend:
     build:
       context: ./server
+    depends_on:
+      - prisma
+    links:
+      - prisma
     volumes:
       - /app/node_modules
       - ./server:/app
 volumes:
   postgres:
+  prisma:
